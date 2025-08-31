@@ -6,10 +6,10 @@ docker stop plantuml
 docker start plantuml
 docker update --restart unless-stopped plantuml
 
-#컨테이너 실행 + 자동 시작
+#Running + Auto Start
 docker run -d --name plantuml -p 8080:8080 --restart unless-stopped plantuml-server
 
-▣ VS Code + Tomcat 10 에서 Debugging 하기
+▣ VS Code + Tomcat 10 에서 Debugging
 TERMINAL >
 set CATALINA_OPTS=-Duser.language=en
 catalina.bat jpda start
