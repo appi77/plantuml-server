@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.sourceforge.plantuml</groupId>
+  <artifactId>plantumlservlet</artifactId>
+  <version>1.2023.9</version>
+  <packaging>war</packaging>
+
+  <name>PlantUML Servlet</name>
+  <url>https://plantuml.github.io/plantuml-server/index.html</url>
+
+  <properties>
+    <java.version>11</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <skipTests>true</skipTests>
+    <plantuml.version>1.2025.4</plantuml.version>
+    <batik.version>1.14</batik.version>
+    <fop.version>2.3</fop.version>
+    <commons-io.version>2.16.1</commons-io.version>
+  <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+  <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+  <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+  </properties>
+
+  <!-- dependencies -->
+  <!-- (여기에는 parent의 모든 dependency들을 포함해야 합니다 — 길어서 생략 가능) -->
+
+  <dependencies>
+    <dependency>
+      <groupId>net.sourceforge.plantuml</groupId>
+      <artifactId>plantuml</artifactId>
+      <version>${plantuml.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet.jsp.jstl</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <!-- PDF
+      PlantUMLs PDF generation requires:
+      - batik-dom
+      - batik-svgrasterizer (includes batik-dom)
+      - batik-svggen
+      - fop-core
+    -->
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-svgrasterizer</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-svggen</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>fop</artifactId>
+      <version>${fop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-dom</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-svg-dom</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-transcoder</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-dom</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-svg-dom</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-transcoder</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-ext</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-bridge</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-util</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>batik-xml</artifactId>
+      <version>${batik.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.16.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>fop</artifactId>
+      <version>${fop.version}</version>
+    </dependency>
+
+    <!-- Testing -->
+  <!-- ...필요한 의존성만 남김... -->
+  </dependencies>
+
+  <build>
+    <finalName>plantuml</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    <!-- 추가 리소스 경로가 있다면 여기에 추가 -->
+  </resources>
+  <!-- ...pluginManagement는 생략, plugins만 유지... -->
+
+    <plugins>
+      <!-- set java compile version -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <!-- configure surefire to skip unit tests if skipTests is set -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <skipTests>${skipTests}</skipTests>
+        </configuration>
+      </plugin>
+      <!-- configure plugin for project's reports -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.12.1</version>
+      </plugin>
+  <!-- ...불필요한 플러그인 생략... -->
+      <!-- check and display possible version updates during validation
+      manual execution:
+      - mvn versions:display-property-updates
+      - mvn versions:display-dependency-updates
+      -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.15.0</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>display-property-updates</goal>
+              <goal>display-dependency-updates</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- check for duplicate classes/resources
+      also see:
+      - mvn dependency:analyze
+      - mvn dependency:tree
+      -->
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <version>1.5.1</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <ignoredResourcePatterns>
+            <ignoredResourcePattern>^about\.html$</ignoredResourcePattern>
+            <ignoredResourcePattern>^license/LICENSE\.dom-software\.txt$</ignoredResourcePattern>
+            <!-- <ignoredResourcePattern>^org/apache/batik/apps/rasterizer/resources/rasterizer\.policy$</ignoredResourcePattern> -->
+          </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+      <!-- check for missing java documentation -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.3</version>
+        <configuration>
+          <show>private</show>
+          <nohelp>true</nohelp>
+          <source>${java.version}</source>
+          <failOnWarnings>true</failOnWarnings>
+        </configuration>
+      </plugin>
+      <!-- provide dependencies -->
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <!-- provide webjars for the embedded jetty server for junit tests -->
+          <execution>
+            <?m2e execute onConfiguration,onIncremental?>
+            <id>unpack-resources</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.webjars.npm</groupId>
+                  <artifactId>monaco-editor</artifactId>
+                  <version>0.36.1</version>
+                  <includes>**/min/vs/loader.js,**/min/vs/**/*,**/min-maps/vs/**/*</includes>
+                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- configure eclipse web tools platform (WTP) -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.10</version>
+        <configuration>
+          <wtpversion>1.5</wtpversion>
+          <wtpContextName>plantuml</wtpContextName>
+        </configuration>
+      </plugin>
+      <!-- configure jetty -->
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+    <version>11.0.20</version>
+        <configuration>
+          <!-- jetty.xml
+            Only necessary to support old proxy.
+            The old proxy needs empty path segments support in URIs.
+            Hence: allow AMBIGUOUS_EMPTY_SEGMENT
+          -->
+          <jettyXmls>${basedir}/src/main/config/jetty.xml</jettyXmls>
+          <scanIntervalSeconds>5</scanIntervalSeconds>
+          <webApp>
+            <contextPath>${jetty.contextpath}</contextPath>
+          </webApp>
+        </configuration>
+      </plugin>
+      <!-- configure java server pages (JSP) web resources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${maven-war-plugin.version}</version>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>${basedir}/src/main/webapp</directory>
+              <includes>
+                <include>*.jspf</include>
+              </includes>
+              <filtering>true</filtering>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+      <!-- remove minified web resources (css, js) before regeneration -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>clean-minified-resources</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <excludeDefaultDirectories>true</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${basedir}/src/main/webapp/min</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- optimize/minimize web resources (css, js) -->
+      <plugin>
+        <groupId>org.primefaces.extensions</groupId>
+        <artifactId>resources-optimizer-maven-plugin</artifactId>
+    <version>2.5.6</version>
+        <executions>
+          <execution>
+            <id>optimize</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>optimize</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <warningLevel>DEFAULT</warningLevel>
+          <failOnWarning>true</failOnWarning>
+          <suffix>.min</suffix>
+          <languageIn>ECMASCRIPT_2020</languageIn>
+          <languageOut>ECMASCRIPT5_STRICT</languageOut>
+          <emitUseStrict>true</emitUseStrict>
+          <resourcesSets>
+            <!-- combine and optimize all JS files for the web server except the PlantUML JS language features -->
+            <resourcesSet>
+              <inputDir>${basedir}/src/main/webapp</inputDir>
+              <includes>
+                <include>components/**/*.js</include>
+                <include>js/**/*.js</include>
+              </includes>
+              <excludes>
+                <exclude>js/language/**</exclude>
+              </excludes>
+              <aggregations>
+                <aggregation>
+                  <withoutCompress>${withoutCSSJSCompress}</withoutCompress>
+                  <removeIncluded>false</removeIncluded>
+                  <outputFile>${basedir}/src/main/webapp/min/plantuml.min.js</outputFile>
+                </aggregation>
+              </aggregations>
+            </resourcesSet>
+            <!-- combine and optimize all PlantUML JS language features -->
+            <resourcesSet>
+              <inputDir>${basedir}/src/main/webapp/js/language</inputDir>
+              <includes>
+                <include>language.js</include>
+                <include>validation/validation.js</include>
+                <include>**/*.js</include>
+              </includes>
+              <aggregations>
+                <aggregation>
+                  <withoutCompress>${withoutCSSJSCompress}</withoutCompress>
+                  <removeIncluded>false</removeIncluded>
+                  <outputFile>${basedir}/src/main/webapp/min/plantuml-language.min.js</outputFile>
+                </aggregation>
+              </aggregations>
+            </resourcesSet>
+            <!-- combine and optimize all web server style files -->
+            <resourcesSet>
+              <inputDir>${basedir}/src/main/webapp/components</inputDir>
+              <includes>
+                <include>**/*.css</include>
+              </includes>
+              <aggregations>
+                <aggregation>
+                  <withoutCompress>${withoutCSSJSCompress}</withoutCompress>
+                  <removeIncluded>false</removeIncluded>
+                  <outputFile>${basedir}/src/main/webapp/min/plantuml.min.css</outputFile>
+                </aggregation>
+              </aggregations>
+            </resourcesSet>
+          </resourcesSets>
+        </configuration>
+      </plugin>
+      <!-- watch for changes in web resources (css, js) and regenerate minified resources (only for development) -->
+      <plugin>
+        <groupId>com.fizzed</groupId>
+        <artifactId>fizzed-watcher-maven-plugin</artifactId>
+    <version>1.0.6</version>
+        <configuration>
+          <watches>
+            <watch>
+              <directory>${basedir}/src/main/webapp/components</directory>
+              <recursive>true</recursive>
+              <includes>
+                <include>*.js</include>
+                <include>*.css</include>
+              </includes>
+              <excludes>
+                <exclude>*.min.js</exclude>
+                <exclude>*.min.css</exclude>
+              </excludes>
+            </watch>
+          </watches>
+          <goals>
+            <goal>clean:clean@clean-minified-resources</goal>
+            <goal>org.primefaces.extensions:resources-optimizer-maven-plugin:optimize</goal>
+          </goals>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- ...reporting 생략... -->
+
+
+  <!-- build/plugins, reporting 등도 parent에서 그대로 가져와야 합니다 -->
+
+</project>
